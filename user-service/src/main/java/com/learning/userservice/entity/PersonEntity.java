@@ -2,8 +2,7 @@ package com.learning.userservice.entity;
 
 import lombok.*;
 
-import javax.persistence.Entity;
-import javax.persistence.Id;
+import javax.persistence.*;
 
 @Entity
 @NoArgsConstructor
@@ -11,10 +10,13 @@ import javax.persistence.Id;
 @Setter
 @Getter
 @Builder
-public class Person {
+@Table(name = "Person")
+public class PersonEntity {
     @Id
     private String pId;
     private String name;
     private String designation;
-    private String address;
+    //by default OneToOne is EAGER fetch so making it Lazy
+    @OneToOne(fetch = FetchType.LAZY)
+    private AddressEntity address;
 }
