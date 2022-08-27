@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
+import java.util.List;
 
 @Service
 @Transactional
@@ -18,5 +19,11 @@ public class PersonServiceImpl implements PersonService {
     @Override
     public Person updateCityAddressDaoService(String personId, String city) {
         return personDao.updateCityAddressDao(personId, city);
+    }
+
+    @Override
+    @Transactional
+    public List<Person> getAllPersonWithAddressService() {
+        return personDao.getAllPersonWithAddressDAO();
     }
 }
