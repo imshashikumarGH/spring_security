@@ -10,6 +10,8 @@ import com.learning.userservice.model.Person;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 @Repository
@@ -40,4 +42,22 @@ public class PersonDaoImpl implements PersonDao {
         }
     }
 
+    @Override
+    public List<Person> getAllPersonWithAddressDAO() {
+        List<PersonEntity> personEntitiesList = personRepository.findAll();
+        personEntitiesList.stream().forEach(personEntity -> personEntity.getAddress());
+        List<Person> personList = new ArrayList<>();
+        personList.forEach(personEntity -> personList.add(Person.builder()
+                .pId(personEntity.getPId())
+                .name(personEntity.getName())
+                .designation(personEntity.getDesignation())
+
+                .address(Address.builder()
+                        .id(personEntity.getAddress().getId())
+                        .country(personEntity.getAddress().getCountry())
+                        .city(personEntity.getAddress().getCity())
+                        .build())
+                .build()));
+        return personList;
+    }
 }
