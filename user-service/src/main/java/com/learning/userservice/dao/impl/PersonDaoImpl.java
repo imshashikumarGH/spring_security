@@ -44,10 +44,11 @@ public class PersonDaoImpl implements PersonDao {
 
     @Override
     public List<Person> getAllPersonWithAddressDAO() {
-        List<PersonEntity> personEntitiesList = personRepository.findAll();
-        personEntitiesList.stream().forEach(personEntity -> personEntity.getAddress());
+//        List<PersonEntity> personEntitiesList = personRepository.findAll();
+//        personEntitiesList.stream().forEach(personEntity -> personEntity.getAddress());
+        List<PersonEntity> personEntitiesList = personRepository.personWithAddress();
         List<Person> personList = new ArrayList<>();
-        personList.forEach(personEntity -> personList.add(Person.builder()
+        personEntitiesList.forEach(personEntity -> personList.add(Person.builder()
                 .pId(personEntity.getPId())
                 .name(personEntity.getName())
                 .designation(personEntity.getDesignation())
