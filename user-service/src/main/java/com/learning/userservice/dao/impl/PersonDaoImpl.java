@@ -3,6 +3,7 @@ package com.learning.userservice.dao.impl;
 import com.learning.userservice.dao.PersonDao;
 import com.learning.userservice.entity.AddressEntity;
 import com.learning.userservice.entity.PersonEntity;
+import com.learning.userservice.exception.BadRequestException;
 import com.learning.userservice.jpaRepository.AddressRepository;
 import com.learning.userservice.jpaRepository.PersonRepository;
 import com.learning.userservice.model.Address;
@@ -38,7 +39,7 @@ public class PersonDaoImpl implements PersonDao {
                             .country(addressEntity.getCountry()).build())
                     .build();
         } else {
-            return Person.builder().build();
+            throw new BadRequestException("Id not found");
         }
     }
 
