@@ -8,4 +8,6 @@ public interface PersonDao {
     Person updateCityAddressDao(String personId, String city);
 
     List<Person> getAllPersonWithAddressDAO();
+
+    List<Person> getAllPersonWithAddressSortedDAO();
 }
