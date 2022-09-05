@@ -10,7 +10,8 @@ import java.util.List;
 @Repository
 public interface PersonRepository extends JpaRepository<PersonEntity, String> {
 
-    @Query("Select * from person join fetch c.address a ")
+    @Query(value = "Select p  from person p join fetch p.address a", nativeQuery = true)
     List<PersonEntity> personWithAddress();
+
 };
 
