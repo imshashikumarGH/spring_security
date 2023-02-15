@@ -48,7 +48,7 @@ public class PersonDaoImpl implements PersonDao {
     public List<Person> getAllPersonWithAddressDAO() {
 //        List<PersonEntity> personEntitiesList = personRepository.findAll();
 //        personEntitiesList.stream().forEach(personEntity -> personEntity.getAddress());
-        List<PersonEntity> personEntitiesList = personRepository.personWithAddress();
+        List<PersonEntity> personEntitiesList = personRepository.findAll();
         List<Person> personList = new ArrayList<>();
         personEntitiesList.forEach(personEntity -> personList.add(Person.builder()
                 .pId(personEntity.getPId())
