@@ -9,6 +9,7 @@ import com.learning.userservice.jpaRepository.PersonRepository;
 import com.learning.userservice.model.Address;
 import com.learning.userservice.model.Person;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Repository;
 
 import java.util.ArrayList;
@@ -47,7 +48,26 @@ public class PersonDaoImpl implements PersonDao {
     public List<Person> getAllPersonWithAddressDAO() {
 //        List<PersonEntity> personEntitiesList = personRepository.findAll();
 //        personEntitiesList.stream().forEach(personEntity -> personEntity.getAddress());
-        List<PersonEntity> personEntitiesList = personRepository.personWithAddress();
+        List<PersonEntity> personEntitiesList = personRepository.findAll();
+        List<Person> personList = new ArrayList<>();
+        personEntitiesList.forEach(personEntity -> personList.add(Person.builder()
+                .pId(personEntity.getPId())
+                .name(personEntity.getName())
+                .designation(personEntity.getDesignation())
+
+                .address(Address.builder()
+                        .id(personEntity.getAddress().getId())
+                        .country(personEntity.getAddress().getCountry())
+                        .city(personEntity.getAddress().getCity())
+                        .build())
+                .build()));
+        return personList;
+    }
+
+    @Override
+    public List<Person> getAllPersonWithAddressSortedDAO() {
+        List<PersonEntity> personEntitiesList = personRepository.findAll(Sort.by(Sort.Direction.ASC, "name").and(Sort.by(Sort.Direction.ASC, "designation")));
+        personEntitiesList.stream().forEach(personEntity -> personEntity.getAddress());
         List<Person> personList = new ArrayList<>();
         personEntitiesList.forEach(personEntity -> personList.add(Person.builder()
                 .pId(personEntity.getPId())
