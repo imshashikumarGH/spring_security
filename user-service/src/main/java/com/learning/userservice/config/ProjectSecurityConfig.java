@@ -3,6 +3,11 @@ package com.learning.userservice.config;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.core.userdetails.User;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.crypto.password.NoOpPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.util.matcher.RequestMatcher;
 
@@ -30,11 +35,45 @@ public class ProjectSecurityConfig {
                         return false;
                     }
                 }).permitAll()
-
                 .and().formLogin()
                 .and().httpBasic();
         return http.build();
+    }
 
 
+//    1st Approach
+    // using withDefaultPasswordEncoder
+//    @Bean
+//    public InMemoryUserDetailsManager userDetailsService() {
+//        UserDetails admin = User.withDefaultPasswordEncoder()
+//                .username("shashi")
+//                .password("11111")
+//                .authorities("admin")
+//                .build();
+//        UserDetails reader = User.withDefaultPasswordEncoder()
+//                .username("ravi")
+//                .password("12345")
+//                .authorities("read")
+//                .build();
+//        return new InMemoryUserDetailsManager(admin, reader);
+//    }
+
+    // 2nd Approach
+    @Bean
+    public InMemoryUserDetailsManager userDetailsService() {
+        UserDetails admin = User.withUsername("shashi")
+                .password("11111")
+                .authorities("admin")
+                .build();
+        UserDetails reader = User.withUsername("ravi")
+                .password("12345")
+                .authorities("read")
+                .build();
+        return new InMemoryUserDetailsManager(admin, reader);
+    }
+
+    @Bean
+    public PasswordEncoder passwordEncoder() {
+        return NoOpPasswordEncoder.getInstance();
     }
 }
