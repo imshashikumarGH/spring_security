@@ -1,3 +1,6 @@
+DELETE FROM person;
+DELETE FROM address;
+
 INSERT INTO address (id, city, country) VALUES (101, 'Delhi', 'India');
 INSERT INTO address (id, city, country) VALUES (102, 'Vellore', 'India');
 
