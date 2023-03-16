@@ -17,20 +17,24 @@ import javax.servlet.http.HttpServletRequest;
 public class ProjectSecurityConfig {
     @Bean
     SecurityFilterChain defaultSecurityFilterChain(HttpSecurity http) throws Exception {
-        http.authorizeHttpRequests()
+        http.csrf().disable().authorizeHttpRequests()
+//                .antMatchers(HttpMethod.POST, "/account/updateAccountAddress").authenticated()
+//                .antMatchers("/account/getAllAccounts").authenticated()
                 .requestMatchers(new RequestMatcher() {
                     @Override
                     public boolean matches(HttpServletRequest request) {
-                        if (request.getRequestURI().matches("/person/getAllPersonWithAddress"))
+                        if (request.getRequestURI().startsWith("/account/"))
                             return true;
                         return false;
                     }
                 })
-                .authenticated()
+                .hasAuthority("admin")
                 .requestMatchers(new RequestMatcher() {
                     @Override
                     public boolean matches(HttpServletRequest request) {
                         if (request.getRequestURI().matches("/swagger-ui/index.html"))
+                            return true;
+                        if (request.getRequestURI().matches("/notice/getBankNotice"))
                             return true;
                         return false;
                     }
@@ -41,8 +45,9 @@ public class ProjectSecurityConfig {
     }
 
 
+//
 //    1st Approach
-    // using withDefaultPasswordEncoder
+//    to add users  using withDefaultPasswordEncoder
 //    @Bean
 //    public InMemoryUserDetailsManager userDetailsService() {
 //        UserDetails admin = User.withDefaultPasswordEncoder()
@@ -58,7 +63,9 @@ public class ProjectSecurityConfig {
 //        return new InMemoryUserDetailsManager(admin, reader);
 //    }
 
-    // 2nd Approach
+
+    //    2nd Approach
+//    use to add n number  users with separated bean of password encoder below
     @Bean
     public InMemoryUserDetailsManager userDetailsService() {
         UserDetails admin = User.withUsername("shashi")
@@ -72,6 +79,7 @@ public class ProjectSecurityConfig {
         return new InMemoryUserDetailsManager(admin, reader);
     }
 
+    // not recommended for production since password is plane text
     @Bean
     public PasswordEncoder passwordEncoder() {
         return NoOpPasswordEncoder.getInstance();
