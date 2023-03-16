@@ -29,9 +29,9 @@ public class ProjectSecurityConfig {
                 .requestMatchers(new RequestMatcher() {
                     @Override
                     public boolean matches(HttpServletRequest request) {
-                        if (request.getRequestURI().matches("/swagger-ui/index.html"))
-                            return true;
-                        if (request.getRequestURI().matches("/notice/getBankNotice"))
+                        if (request.getRequestURI().matches("/swagger-ui/index.html")
+                                || request.getRequestURI().matches("/notice/getBankNotice")
+                                || request.getRequestURI().matches("/customer/registerd"))
                             return true;
                         return false;
                     }
