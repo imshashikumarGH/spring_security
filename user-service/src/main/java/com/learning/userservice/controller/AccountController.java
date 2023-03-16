@@ -4,29 +4,24 @@ import com.learning.userservice.service.PersonService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
-
-import javax.websocket.server.PathParam;
+import org.springframework.web.bind.annotation.*;
 
 
 @RestController()
-@RequestMapping("/person")
-public class PersonController {
+@RequestMapping("/account")
+public class AccountController {
 
     @Autowired
     PersonService personService;
 
-    @PostMapping(value = "/updateAddress")
-    public ResponseEntity<?> updateAddressCity(@PathParam("personId") String personId, @PathParam("city") String city) {
+    @PostMapping(value = "/updateAccountAddress")
+    public ResponseEntity<?> updateAddressCity(@RequestParam("personId") String personId, @RequestParam("city") String city) {
 
         return new ResponseEntity<>(personService.updateCityAddressDaoService(personId, city), HttpStatus.OK);
 
     }
 
-    @GetMapping(value = "/getAllPersonWithAddress")
+    @GetMapping(value = "/getAllAccounts")
     public ResponseEntity<?> getAllPersonWithAddress() {
         return new ResponseEntity<>(personService.getAllPersonWithAddressService(), HttpStatus.OK);
     }
