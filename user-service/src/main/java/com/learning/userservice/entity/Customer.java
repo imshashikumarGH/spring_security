@@ -15,7 +15,6 @@ import javax.persistence.Table;
 @Table(name = "Customer")
 public class Customer {
     @Id
-    private String id;
     private String email;
     private String password;
     private String role;
