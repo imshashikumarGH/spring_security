@@ -1,6 +1,7 @@
 package com.learning.userservice.config;
 
 import com.learning.userservice.filter.CsrfCookieFilter;
+import com.learning.userservice.filter.LogUserFilter;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -51,6 +52,7 @@ public class ProjectSecurityConfig {
                     }
                 }).csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse()))
                 .addFilterAfter(new CsrfCookieFilter(), BasicAuthenticationFilter.class)
+                .addFilterAfter(new LogUserFilter(), BasicAuthenticationFilter.class)
                 .authorizeHttpRequests()
 //                .antMatchers(HttpMethod.POST, "/account/updateAccountAddress").authenticated()
 //                .antMatchers("/account/getAllAccounts").authenticated()
