@@ -15,7 +15,9 @@ public class AccountController {
     PersonService personService;
 
     @PostMapping(value = "/updateAccountAddress")
-    public ResponseEntity<?> updateAddressCity(@RequestParam("personId") String personId, @RequestParam("city") String city) {
+    public ResponseEntity<?> updateAddressCity(@RequestParam("personId") String personId,
+                                               @RequestParam("city") String city,
+                                               @RequestHeader("X-XSRF-TOKEN") String x) {
 
         return new ResponseEntity<>(personService.updateCityAddressDaoService(personId, city), HttpStatus.OK);
 
