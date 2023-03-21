@@ -10,6 +10,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
 import org.springframework.security.web.csrf.CookieCsrfTokenRepository;
+import org.springframework.security.web.csrf.HttpSessionCsrfTokenRepository;
 import org.springframework.security.web.util.matcher.RequestMatcher;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
@@ -21,13 +22,10 @@ import java.util.Collections;
 public class ProjectSecurityConfig {
     @Bean
     SecurityFilterChain defaultSecurityFilterChain(HttpSecurity http) throws Exception {
-        CookieCsrfTokenRepository requestHandler = new CookieCsrfTokenRepository();
+        HttpSessionCsrfTokenRepository requestHandler = new HttpSessionCsrfTokenRepository();
         requestHandler.setParameterName("_csrf");
-
-
         // this will apply for all controllers
-        http
-                .securityContext().requireExplicitSave(false)
+        http.securityContext().requireExplicitSave(false)
                 .and().sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.ALWAYS))
                 .cors().configurationSource(new CorsConfigurationSource() {
                     @Override
@@ -43,10 +41,9 @@ public class ProjectSecurityConfig {
                 })
                 .and()
                 .csrf((csrf) -> csrf.csrfTokenRepository(requestHandler).ignoringRequestMatchers(new RequestMatcher() {
-
-
                     @Override
                     public boolean matches(HttpServletRequest request) {
+
                         if (request.getRequestURI().startsWith("/customer/register")) {
                             return true;
                         }
@@ -60,6 +57,7 @@ public class ProjectSecurityConfig {
                 .requestMatchers(new RequestMatcher() {
                     @Override
                     public boolean matches(HttpServletRequest request) {
+
                         if (request.getRequestURI().startsWith("/account/"))
                             return true;
                         return false;
