@@ -58,12 +58,19 @@ public class ProjectSecurityConfig {
                     @Override
                     public boolean matches(HttpServletRequest request) {
 
-                        if (request.getRequestURI().startsWith("/account/"))
+                        if (request.getRequestURI().startsWith("/account/updateAccountAddress"))
                             return true;
                         return false;
                     }
-                })
-                .hasAuthority("admin")
+                }).hasAnyRole("USER", "ADMIN")
+                .requestMatchers(new RequestMatcher() {
+                    @Override
+                    public boolean matches(HttpServletRequest request) {
+                        if (request.getRequestURI().startsWith("/account/getAllAccounts"))
+                            return true;
+                        return false;
+                    }
+                }).hasRole("ADMIN")
                 .requestMatchers(new RequestMatcher() {
                     @Override
                     public boolean matches(HttpServletRequest request) {

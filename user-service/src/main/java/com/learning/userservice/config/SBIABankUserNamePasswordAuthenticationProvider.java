@@ -33,7 +33,7 @@ public class SBIABankUserNamePasswordAuthenticationProvider implements Authentic
         if (!customers.isEmpty()) {
             if (passwordEncoder.matches(password, customers.get(0).getPassword())) {
                 List<GrantedAuthority> authorityList = new ArrayList<>();
-                authorityList.add(new SimpleGrantedAuthority(customers.get(0).getRole()));
+                customers.get(0).getAuthorities().forEach(authority -> authorityList.add(new SimpleGrantedAuthority(authority.getName())));
                 return new UsernamePasswordAuthenticationToken(userName, password, authorityList);
             } else {
                 throw new BadCredentialsException("Invalid Credentials");
