@@ -62,7 +62,7 @@ public class ProjectSecurityConfig {
                             return true;
                         return false;
                     }
-                }).hasAnyAuthority("user", "admin")
+                }).hasAnyRole("USER", "ADMIN")
                 .requestMatchers(new RequestMatcher() {
                     @Override
                     public boolean matches(HttpServletRequest request) {
@@ -70,7 +70,7 @@ public class ProjectSecurityConfig {
                             return true;
                         return false;
                     }
-                }).hasAuthority("admin")
+                }).hasRole("ADMIN")
                 .requestMatchers(new RequestMatcher() {
                     @Override
                     public boolean matches(HttpServletRequest request) {
