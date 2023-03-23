@@ -25,7 +25,7 @@ public class ProjectSecurityConfig {
     SecurityFilterChain defaultSecurityFilterChain(HttpSecurity http) throws Exception {
         HttpSessionCsrfTokenRepository requestHandler = new HttpSessionCsrfTokenRepository();
         requestHandler.setParameterName("_csrf");
-        // this will apply for all controllers
+        // this will apply for all controllers to create and share it with UI JSESSION Token every time
         http.securityContext().requireExplicitSave(false)
                 .and().sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.ALWAYS))
                 .cors().configurationSource(new CorsConfigurationSource() {
