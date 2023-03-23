@@ -30,7 +30,8 @@ public class ProjectSecurityConfig {
     SecurityFilterChain defaultSecurityFilterChain(HttpSecurity http) throws Exception {
         HttpSessionCsrfTokenRepository requestHandler = new HttpSessionCsrfTokenRepository();
         requestHandler.setParameterName("_csrf");
-        //To spring : not to create JSession ID and not to save any session id details
+
+        //To spring : Not to create JSession ID and not to save any session id details
         http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and()
                 .cors().configurationSource(new CorsConfigurationSource() {
@@ -41,7 +42,8 @@ public class ProjectSecurityConfig {
                         config.setAllowedMethods(Collections.singletonList("*"));
                         config.setAllowCredentials(true);
                         config.setAllowedHeaders(Collections.singletonList("*"));
-                        // to let the Ui know about our custom header and expose it.
+
+                        // To let the UI know about our custom header and expose it.
                         config.setExposedHeaders(Arrays.asList(JWT_HEADER_NAME));
                         config.setMaxAge(3600L);
                         return config;
@@ -60,7 +62,9 @@ public class ProjectSecurityConfig {
                 }).csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse()))
                 .addFilterAfter(new CsrfCookieFilter(), BasicAuthenticationFilter.class)
                 .addFilterAfter(new LogUserFilter(), BasicAuthenticationFilter.class)
+                //token generation after BasicAuthenticationFilter
                 .addFilterAfter(new JWTTokenGenerationFilter(), BasicAuthenticationFilter.class)
+                //token validation after BasicAuthenticationFilter
                 .addFilterBefore(new JWTTokenValidatorFilter(), BasicAuthenticationFilter.class)
                 .authorizeHttpRequests()
 //                .antMatchers(HttpMethod.POST, "/account/updateAccountAddress").authenticated()
