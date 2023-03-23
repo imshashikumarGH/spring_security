@@ -1,6 +1,8 @@
 package com.learning.userservice.config;
 
 import com.learning.userservice.filter.CsrfCookieFilter;
+import com.learning.userservice.filter.JWTTokenGenerationFilter;
+import com.learning.userservice.filter.JWTTokenValidatorFilter;
 import com.learning.userservice.filter.LogUserFilter;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -17,7 +19,10 @@ import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.Arrays;
 import java.util.Collections;
+
+import static com.learning.userservice.util.SecurityConstant.JWT_HEADER_NAME;
 
 @Configuration
 public class ProjectSecurityConfig {
@@ -25,9 +30,10 @@ public class ProjectSecurityConfig {
     SecurityFilterChain defaultSecurityFilterChain(HttpSecurity http) throws Exception {
         HttpSessionCsrfTokenRepository requestHandler = new HttpSessionCsrfTokenRepository();
         requestHandler.setParameterName("_csrf");
-        // this will apply for all controllers
-        http.securityContext().requireExplicitSave(false)
-                .and().sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.ALWAYS))
+
+        //To spring : Not to create JSession ID and not to save any session id details
+        http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+                .and()
                 .cors().configurationSource(new CorsConfigurationSource() {
                     @Override
                     public CorsConfiguration getCorsConfiguration(HttpServletRequest request) {
@@ -36,6 +42,9 @@ public class ProjectSecurityConfig {
                         config.setAllowedMethods(Collections.singletonList("*"));
                         config.setAllowCredentials(true);
                         config.setAllowedHeaders(Collections.singletonList("*"));
+
+                        // To let the UI know about our custom header and expose it.
+                        config.setExposedHeaders(Arrays.asList(JWT_HEADER_NAME));
                         config.setMaxAge(3600L);
                         return config;
                     }
@@ -45,7 +54,7 @@ public class ProjectSecurityConfig {
                     @Override
                     public boolean matches(HttpServletRequest request) {
 
-                        if (request.getRequestURI().startsWith("/customer/register")) {
+                        if (request.getRequestURI().startsWith("/customer/register") || request.getRequestURI().startsWith("/customer/login")) {
                             return true;
                         }
                         return false;
@@ -53,6 +62,10 @@ public class ProjectSecurityConfig {
                 }).csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse()))
                 .addFilterAfter(new CsrfCookieFilter(), BasicAuthenticationFilter.class)
                 .addFilterAfter(new LogUserFilter(), BasicAuthenticationFilter.class)
+                //token generation after BasicAuthenticationFilter
+                .addFilterAfter(new JWTTokenGenerationFilter(), BasicAuthenticationFilter.class)
+                //token validation after BasicAuthenticationFilter
+                .addFilterBefore(new JWTTokenValidatorFilter(), BasicAuthenticationFilter.class)
                 .authorizeHttpRequests()
 //                .antMatchers(HttpMethod.POST, "/account/updateAccountAddress").authenticated()
 //                .antMatchers("/account/getAllAccounts").authenticated()
