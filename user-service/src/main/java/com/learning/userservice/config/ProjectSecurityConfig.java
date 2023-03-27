@@ -13,7 +13,6 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
 import org.springframework.security.web.csrf.CookieCsrfTokenRepository;
-import org.springframework.security.web.csrf.HttpSessionCsrfTokenRepository;
 import org.springframework.security.web.util.matcher.RequestMatcher;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
@@ -28,7 +27,7 @@ import static com.learning.userservice.util.SecurityConstant.JWT_HEADER_NAME;
 public class ProjectSecurityConfig {
     @Bean
     SecurityFilterChain defaultSecurityFilterChain(HttpSecurity http) throws Exception {
-        HttpSessionCsrfTokenRepository requestHandler = new HttpSessionCsrfTokenRepository();
+        CookieCsrfTokenRepository requestHandler = new CookieCsrfTokenRepository();
         requestHandler.setParameterName("_csrf");
 
         //To spring : Not to create JSession ID and not to save any session id details
@@ -85,7 +84,7 @@ public class ProjectSecurityConfig {
                             return true;
                         return false;
                     }
-                }).hasRole("ADMIN")
+                }).authenticated()
                 .requestMatchers(new RequestMatcher() {
                     @Override
                     public boolean matches(HttpServletRequest request) {
