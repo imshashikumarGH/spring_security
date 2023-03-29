@@ -91,8 +91,7 @@ public class ProjectSecurityConfig {
                         return false;
                     }
                 }).permitAll()
-                .and().formLogin()
-                .and().httpBasic();
+                .and().oauth2ResourceServer().jwt().jwtAuthenticationConverter(jwtAuthenticationConverter);
         return http.build();
     }
 
