@@ -8,15 +8,19 @@ import com.learning.userservice.jpaRepository.AddressRepository;
 import com.learning.userservice.jpaRepository.PersonRepository;
 import com.learning.userservice.model.Address;
 import com.learning.userservice.model.Person;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Isolation;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
 @Repository
+@Slf4j
 public class PersonDaoImpl implements PersonDao {
 
     @Autowired
@@ -26,6 +30,7 @@ public class PersonDaoImpl implements PersonDao {
     AddressRepository addressRepository;
 
     public Person updateCityAddressDao(String personId, String city) {
+
         Optional<PersonEntity> person = personRepository.findById(personId);
         if (person.isPresent()) {
             AddressEntity addressEntity = person.get().getAddress();
@@ -45,10 +50,13 @@ public class PersonDaoImpl implements PersonDao {
     }
 
     @Override
+    @Transactional(isolation = Isolation.READ_COMMITTED)
     public List<Person> getAllPersonWithAddressDAO() {
 //        List<PersonEntity> personEntitiesList = personRepository.findAll();
 //        personEntitiesList.stream().forEach(personEntity -> personEntity.getAddress());
+        long start = System.nanoTime();
         List<PersonEntity> personEntitiesList = personRepository.findAll();
+        log.info("updateCityAddressDao");
         List<Person> personList = new ArrayList<>();
         personEntitiesList.forEach(personEntity -> personList.add(Person.builder()
                 .pId(personEntity.getPId())
@@ -61,6 +69,10 @@ public class PersonDaoImpl implements PersonDao {
                         .city(personEntity.getAddress().getCity())
                         .build())
                 .build()));
+        long end = System.nanoTime();
+        long time = end - start;
+
+        log.info("time taken -------------------------->>>>>>>>>>>>>" + time);
         return personList;
     }
 
