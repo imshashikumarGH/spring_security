@@ -11,6 +11,7 @@ import javax.persistence.*;
 @Getter
 @Builder
 @Table(name = "Address")
+@Cacheable
 public class AddressEntity {
     @Id
     @GeneratedValue
