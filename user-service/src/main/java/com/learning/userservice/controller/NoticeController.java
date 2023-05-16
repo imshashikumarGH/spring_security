@@ -1,5 +1,7 @@
 package com.learning.userservice.controller;
 
+import com.learning.userservice.service.NoticeService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -14,11 +16,14 @@ import java.util.Map;
 public class NoticeController {
     public static String MESSAGE = "Message";
 
+    @Autowired
+    NoticeService noticeService;
+
     @GetMapping(value = "/getBankNotice")
     public ResponseEntity<?> getAllPersonWithAddress() {
         Map map = new HashMap<String, String>();
-
-        map.put(MESSAGE, "!!! No Imp Notice !!!");
+        String megs = noticeService.getNotice();
+        map.put(MESSAGE, megs);
         return new ResponseEntity<>(map, HttpStatus.OK);
     }
 }
